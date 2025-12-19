@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ellen's Space - 個人品牌網站</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Google Fonts: Noto Sans TC -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: #FEF9E7; /* 奶油黃 */
+            color: #5D4037; /* 深咖啡色 */
+            overflow-x: hidden;
+        }
+        .cloud-card {
+            border-radius: 2.5rem;
+            background-color: white;
+            border: 4px solid white;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.05);
+            transition: all 0.5s ease;
+        }
+        .cloud-card:not(.no-cursor) {
+            cursor: pointer;
+        }
+        .cloud-card:hover:not(.no-cursor) {
+            transform: translateY(-0.5rem);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+        }
+        .no-cursor {
+            cursor: default;
+        }
+        
+        .nav-active {
+            background-color: #FFAB91 !important;
+            color: white !important;
+            box-shadow: 0 4px 12px rgba(255,171,145,0.3);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.7s ease both;
+        }
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .floating-decoration {
+            pointer-events: none;
+            position: fixed;
+            z-index: 0;
+        }
+        .timeline-line {
+            border-left: 4px dashed #FDE2E4;
+        }
+
+        /* Modal 樣式 */
+        #project-modal {
+            transition: opacity 0.3s ease;
+        }
+        .modal-container {
+            border-radius: 3rem;
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+
+        /* 手機版選單動畫 */
+        #mobile-menu {
+            transition: transform 0.3s ease-in-out;
+            transform: translateX(100%);
+        }
+        #mobile-menu.open {
+            transform: translateX(0);
+        }
+    </style>
+</head>
+<body class="selection:bg-[#FFAB91] selection:text-white">
+
+    <!-- 背景裝飾 -->
+    <div class="floating-decoration top-10 left-10 text-[#FFAB91] opacity-30 animate-bounce" style="animation-duration: 3s;">
+        <i data-lucide="star" fill="currentColor" size="32"></i>
+    </div>
+    <div class="floating-decoration bottom-20 right-10 text-[#4DB6AC] opacity-20 animate-pulse">
+        <i data-lucide="cloud" fill="currentColor" size="48"></i>
+    </div>
+    <div class="floating-decoration top-1/2 left-5 text-[#FF8A80] opacity-20 rotate-12">
+        <i data-lucide="sparkles" size="40"></i>
+    </div>
+
+    <!-- 導航欄 -->
+    <nav class="fixed top-4 lg:top-6 left-1/2 -translate-x-1/2 z-50 w-[95%] lg:w-[90%] max-w-5xl">
+        <div class="bg-white/70 backdrop-blur-lg rounded-full px-4 lg:px-6 py-2 lg:py-3 shadow-lg flex justify-between items-center border border-white/50">
+            <div class="font-bold text-lg lg:text-xl tracking-tighter flex items-center gap-2">
+                <div class="w-8 h-8 lg:w-9 lg:h-9 rounded-full bg-gradient-to-tr from-[#FFAB91] to-[#FDE2E4] flex items-center justify-center text-white shadow-inner">
+                    <i data-lucide="sparkles" size="16"></i>
+                </div>
+                <span class="bg-clip-text text-transparent bg-gradient-to-r from-[#5D4037] to-[#8D6E63]">Ellen's Space</span>
+            </div>
+            
+            <div class="hidden lg:flex gap-1" id="nav-links">
+                <button data-tab-target="home" class="nav-btn nav-active px-4 py-2 rounded-full transition-all flex items-center gap-2 group">
+                    <i data-lucide="heart" size="16"></i><span class="text-sm font-bold">首頁</span>
+                </button>
+                <button data-tab-target="exp" class="nav-btn px-4 py-2 rounded-full transition-all flex items-center gap-2 group hover:bg-[#FDE2E4]">
+                    <i data-lucide="briefcase" size="16"></i><span class="text-sm font-bold">經歷與研究</span>
+                </button>
+                <button data-tab-target="skills" class="nav-btn px-4 py-2 rounded-full transition-all flex items-center gap-2 group hover:bg-[#FDE2E4]">
+                    <i data-lucide="code" size="16"></i><span class="text-sm font-bold">技術與證照</span>
+                </button>
+                <button data-tab-target="portfolio" class="nav-btn px-4 py-2 rounded-full transition-all flex items-center gap-2 group hover:bg-[#FDE2E4]">
+                    <i data-lucide="sparkles" size="16"></i><span class="text-sm font-bold">作品集</span>
+                </button>
+                <button data-tab-target="blog" class="nav-btn px-4 py-2 rounded-full transition-all flex items-center gap-2 group hover:bg-[#FDE2E4]">
+                    <i data-lucide="calendar" size="16"></i><span class="text-sm font-bold">未來的規劃</span>
+                </button>
+                <button data-tab-target="about" class="nav-btn px-4 py-2 rounded-full transition-all flex items-center gap-2 group hover:bg-[#FDE2E4]">
+                    <i data-lucide="user" size="16"></i><span class="text-sm font-bold">關於我</span>
+                </button>
+            </div>
+
+            <button class="lg:hidden p-2 rounded-full bg-[#FFAB91] text-white shadow-md" onclick="toggleMobileMenu(true)">
+                <i data-lucide="menu" size="20"></i>
+            </button>
+        </div>
+    </nav>
+
+    <div id="mobile-menu" class="fixed inset-0 z-[100] bg-[#FEF9E7] flex flex-col p-8 lg:hidden">
+        <div class="flex justify-between items-center mb-12">
+            <span class="text-2xl font-black text-[#FFAB91]">選單目錄</span>
+            <button class="p-3 rounded-full bg-white shadow-sm" onclick="toggleMobileMenu(false)">
+                <i data-lucide="x" size="24"></i>
+            </button>
+        </div>
+        <div class="flex flex-col gap-4">
+            <button data-tab-target="home" class="nav-btn-mobile flex items-center gap-4 p-5 rounded-3xl bg-white shadow-sm font-bold text-lg" onclick="handleMobileNav('home')">
+                <i data-lucide="heart" class="text-[#FFAB91]"></i> 首頁
+            </button>
+            <button data-tab-target="exp" class="nav-btn-mobile flex items-center gap-4 p-5 rounded-3xl bg-white shadow-sm font-bold text-lg" onclick="handleMobileNav('exp')">
+                <i data-lucide="briefcase" class="text-[#FFAB91]"></i> 經歷與研究
+            </button>
+            <button data-tab-target="skills" class="nav-btn-mobile flex items-center gap-4 p-5 rounded-3xl bg-white shadow-sm font-bold text-lg" onclick="handleMobileNav('skills')">
+                <i data-lucide="code" class="text-[#4DB6AC]"></i> 技術與證照
+            </button>
+            <button data-tab-target="portfolio" class="nav-btn-mobile flex items-center gap-4 p-5 rounded-3xl bg-white shadow-sm font-bold text-lg" onclick="handleMobileNav('portfolio')">
+                <i data-lucide="sparkles" class="text-[#FFAB91]"></i> 作品集
+            </button>
+            <button data-tab-target="blog" class="nav-btn-mobile flex items-center gap-4 p-5 rounded-3xl bg-white shadow-sm font-bold text-lg" onclick="handleMobileNav('blog')">
+                <i data-lucide="calendar" class="text-[#4DB6AC]"></i> 未來的規劃
+            </button>
+            <button data-tab-target="about" class="nav-btn-mobile flex items-center gap-4 p-5 rounded-3xl bg-white shadow-sm font-bold text-lg" onclick="handleMobileNav('about')">
+                <i data-lucide="user" class="text-[#4DB6AC]"></i> 關於我
+            </button>
+        </div>
+    </div>
+
+    <main class="pt-24 lg:pt-32 pb-12 lg:pb-20 px-4 lg:px-6 max-w-6xl mx-auto relative z-10">
+
+        <!-- 1. 首頁 -->
+        <section id="home" class="tab-content active">
+            <div class="flex flex-col items-center text-center max-w-4xl mx-auto px-2">
+                <div class="inline-flex items-center gap-2 px-6 py-2 rounded-full bg-white text-[#4DB6AC] font-bold text-xs lg:text-sm mb-6 lg:mb-8 shadow-sm border border-[#E2ECE9] animate-in fade-in slide-in-from-top-4 duration-1000">
+                    <i data-lucide="coffee" size="14"></i> Hello there! 歡迎光臨 Ellen 的空間
+                </div>
+                
+                <h1 class="text-4xl md:text-8xl font-black mb-6 lg:mb-10 leading-tight tracking-tight animate-in fade-in zoom-in duration-1000">
+                    我是 <span class="text-[#FFAB91] underline decoration-wavy decoration-[#FDE2E4]">Ellen</span>
+                    <br><span class="text-2xl md:text-5xl opacity-70">資深研發與測試專家。</span>
+                </h1>
+                
+                <p class="text-base md:text-2xl leading-relaxed opacity-80 mb-8 lg:mb-12 max-w-2xl font-medium animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-200 text-justify md:text-center">
+                    具備深厚的 .NET 與 Java Server Side 開發經驗，擅長高併發運算與自動化測試架構。從 C# 大數據運算、Robot Framework 腳本到 JMeter 壓力測試設計，我用技術編織溫暖與穩定。
+                </p>
+                
+                <div class="flex gap-4 lg:gap-6 justify-center animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-500">
+                    <button onclick="switchTab('exp')" class="group px-8 lg:px-12 py-4 lg:py-5 rounded-full bg-[#FFAB91] text-white font-bold text-lg lg:text-xl hover:shadow-xl transition-all hover:-translate-y-1 flex items-center gap-2 lg:gap-3">
+                        我的介紹 <i data-lucide="chevron-right" size="20" class="group-hover:translate-x-1 transition-transform"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. 關於我 -->
+        <section id="about" class="tab-content">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
+                <div class="lg:col-span-2 space-y-6 lg:space-y-8">
+                    <div class="cloud-card p-6 lg:p-10 bg-white/90 no-cursor h-full">
+                        <h2 class="text-2xl lg:text-3xl font-bold mb-6 lg:mb-8 flex items-center gap-3">
+                           <div class="p-2 rounded-2xl bg-[#E2ECE9] text-[#4DB6AC]"><i data-lucide="heart"></i></div> 
+                           我的興趣
+                        </h2>
+                        <div class="space-y-4 lg:space-y-6 text-base lg:text-lg leading-relaxed font-medium opacity-80 text-justify">
+                            <p>平時下班時間我每天都會閱讀《大家說英語》及《空中英語教室》來加強聽力和閱讀能力，並增加單字量。我深信持續的學習是保持思維敏銳的最佳方式。</p>
+                            <p>最近正在閱讀一本書《心態致勝：全新成功心理學》，從中學到了成長型思維的重要性，覺得收穫很多，對工作與生活都有了新的啟發。</p>
+                            <p>在其他休閒時間，我喜歡看介紹旅遊和美食的 YouTube 影片，透過影片探索世界各地的風土民情，這是我放鬆身心並獲取生活靈感的方式。</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="space-y-6 lg:space-y-8">
+                    <div class="cloud-card p-6 lg:p-8 bg-[#FDE2E4]/40 no-cursor">
+                        <h3 class="font-bold text-lg lg:text-xl mb-4 text-[#5D4037]">Ellen 的標籤</h3>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="px-3 lg:px-4 py-1.5 lg:py-2 bg-white rounded-2xl text-xs font-bold shadow-sm">堅毅負責</span>
+                            <span class="px-3 lg:px-4 py-1.5 lg:py-2 bg-white rounded-2xl text-xs font-bold shadow-sm">技術導向</span>
+                            <span class="px-3 lg:px-4 py-1.5 lg:py-2 bg-white rounded-2xl text-xs font-bold shadow-sm">持續學習</span>
+                            <span class="px-3 lg:px-4 py-1.5 lg:py-2 bg-white rounded-2xl text-xs font-bold shadow-sm">解決問題</span>
+                        </div>
+                    </div>
+                    <div class="cloud-card p-6 lg:p-8 no-cursor">
+                        <h3 class="font-bold text-lg lg:text-xl mb-4 flex items-center gap-2 text-[#4DB6AC]">生活小確幸 🌈</h3>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="px-3 py-1 bg-[#FEF9E7] rounded-full text-xs font-bold">寫程式 💻</span>
+                            <span class="px-3 py-1 bg-[#FEF9E7] rounded-full text-xs font-bold">聽音樂 🎵</span>
+                            <span class="px-3 py-1 bg-[#FEF9E7] rounded-full text-xs font-bold">YouTube 📺</span>
+                            <span class="px-3 py-1 bg-[#FEF9E7] rounded-full text-xs font-bold">電影 🎬</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. 經歷與研究 -->
+        <section id="exp" class="tab-content">
+            <div class="space-y-6 lg:space-y-10">
+                <!-- 職涯歷程 - 完整還原 -->
+                <div class="cloud-card p-6 lg:p-10 no-cursor">
+                    <h2 class="text-2xl lg:text-3xl font-black mb-8 lg:mb-12 flex items-center gap-3 text-[#5D4037]">
+                        <div class="p-2 lg:p-3 rounded-2xl bg-[#FEF9E7] text-[#FFAB91]"><i data-lucide="briefcase"></i></div>
+                        職涯歷程
+                    </h2>
+                    <div class="relative pl-6 lg:pl-10 timeline-line">
+                        
+                        <!-- 1. 凌群電腦 -->
+                        <div class="mb-12 relative group">
+                            <div class="absolute -left-[30px] lg:-left-[54px] top-1 w-4 h-4 lg:w-6 lg:h-6 rounded-full bg-white border-4 border-[#FFAB91] z-10 transition-transform group-hover:scale-125"></div>
+                            <span class="text-[10px] lg:text-xs font-bold text-[#FFAB91] bg-[#FDE2E4]/40 px-3 py-1 rounded-full uppercase tracking-wider">2015/1 ~ 仍在職</span>
+                            <h3 class="text-lg lg:text-xl font-bold mt-2 text-[#5D4037]">資深工程師 / QA 測試專家</h3>
+                            <p class="text-sm font-bold text-[#4DB6AC] mb-1">凌群電腦</p>
+                            <p class="mt-2 text-slate-600 text-sm lg:text-base leading-relaxed text-justify">
+                                早期主導大型 C# 資料運算分析與轉檔專案。 目前從事 QA 自動化測試，包含 Robot Framework UI 腳本、API 自動化 (Python+Pytest) 以及 JMeter 壓測設計，並使用 Python 與 Golang 開發輔助測試工具。
+                            </p>
+                        </div>
+
+                        <!-- 2. 福億通訊 -->
+                        <div class="mb-12 relative group">
+                            <div class="absolute -left-[30px] lg:-left-[54px] top-1 w-4 h-4 lg:w-6 lg:h-6 rounded-full bg-white border-4 border-[#4DB6AC] z-10 transition-transform group-hover:scale-125"></div>
+                            <span class="text-[10px] lg:text-xs font-bold text-[#4DB6AC] bg-[#E2ECE9] px-3 py-1 rounded-full uppercase tracking-wider">2011/9 ~ 2014/9</span>
+                            <h3 class="text-lg lg:text-xl font-bold mt-2 text-[#5D4037]">軟體工程師 / Internet 程式設計師</h3>
+                            <p class="text-sm font-bold text-[#4DB6AC] mb-2">福億通訊</p>
+                            <div class="text-slate-600 text-sm lg:text-base leading-relaxed space-y-3 text-justify">
+                                <p>負責維護與設計 <b>Embedded Devices</b> 網頁設定介面 (ASP Web)、CGI/CLI 程式以及廠測程式 (wxWidgets & C)。網頁介面開發包含：設備功能設定、設定精靈、選單設計及多版型整合。</p>
+                                <p>伺服端採用 <b>C 語言</b> 與公司研發之 <b>Small Code Template Engine</b> 開發；客戶端使用 <b>YUI 2 / jQuery</b> 搭配 Ajax 技術。</p>
+                                <p class="bg-[#FEF9E7] p-4 rounded-2xl border border-[#FDE2E4]">
+                                    <b>技術亮點：</b>廠測程式流程全面採 <b>狀態機 (State Machine)</b> 設計，僅透過狀態切換與 Timer 驅動，在不使用多執行緒的情況下精準呈現複雜的動態流程。
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- 3. 國網中心 -->
+                        <div class="mb-12 relative group">
+                            <div class="absolute -left-[30px] lg:-left-[54px] top-1 w-4 h-4 lg:w-6 lg:h-6 rounded-full bg-white border-4 border-slate-300 z-10 transition-transform group-hover:scale-125"></div>
+                            <span class="text-[10px] lg:text-xs font-bold opacity-40 bg-slate-100 px-3 py-1 rounded-full uppercase tracking-wider">2006/7 ~ 2008/7</span>
+                            <h3 class="text-lg lg:text-xl font-bold mt-2 text-[#5D4037]">技術員</h3>
+                            <p class="text-sm font-bold text-slate-400 mb-2">國網中心 NCHC</p>
+                            <p class="text-slate-600 text-sm lg:text-base leading-relaxed text-justify">
+                                參與雲端技術 (Google File System + MapReduce + Bigtable) 相關研究。深入研究 Hadoop、HBase/Hypertable 分散式儲存與搜尋系統應用。開發語言包含 Java, PHP, Bash Shell Script 並涉及 Stored Procedure。
+                            </p>
+                        </div>
+
+                        <!-- 4. 倍捷 -->
+                        <div class="mb-12 relative group">
+                            <div class="absolute -left-[30px] lg:-left-[54px] top-1 w-4 h-4 lg:w-6 lg:h-6 rounded-full bg-white border-4 border-slate-300 z-10 transition-transform group-hover:scale-125"></div>
+                            <span class="text-[10px] lg:text-xs font-bold opacity-40 bg-slate-100 px-3 py-1 rounded-full uppercase tracking-wider">2005/6 ~ 2006/6</span>
+                            <h3 class="text-lg lg:text-xl font-bold mt-2 text-[#5D4037]">工程師</h3>
+                            <p class="text-sm font-bold text-slate-400 mb-2">倍捷</p>
+                            <p class="text-slate-600 text-sm lg:text-base leading-relaxed text-justify">
+                                開發 Embedded Web Server 外掛功能。基於 <b>GoAhead Web Server</b> 框架設計一整套 SDK 介面，驅動底層 Bash Shell Script 調整系統組態。實作類似 CGI 模式，搭配 Javascript 引用 SDK。
+                            </p>
+                        </div>
+
+                        <!-- 5. 榮電 -->
+                        <div class="mb-12 relative group">
+                            <div class="absolute -left-[30px] lg:-left-[54px] top-1 w-4 h-4 lg:w-6 lg:h-6 rounded-full bg-white border-4 border-slate-300 z-10 transition-transform group-hover:scale-125"></div>
+                            <span class="text-[10px] lg:text-xs font-bold opacity-40 bg-slate-100 px-3 py-1 rounded-full uppercase tracking-wider">2004/8 ~ 2005/5</span>
+                            <h3 class="text-lg lg:text-xl font-bold mt-2 text-[#5D4037]">系統分析師</h3>
+                            <p class="text-sm font-bold text-slate-400 mb-2">榮電</p>
+                            <p class="text-slate-600 text-sm lg:text-base leading-relaxed text-justify">
+                                負責政府機關案件管理內部網站規劃及建置。執行系統分析文件設計與程式撰寫。資料庫以 MS SQL 及 MySQL 為主，語言為 <b>Java Servlet</b> 搭配 JSP、Javascript 及 VB Script。
+                            </p>
+                        </div>
+
+                        <!-- 6. 敦緯數位 -->
+                        <div class="mb-12 relative group">
+                            <div class="absolute -left-[30px] lg:-left-[54px] top-1 w-4 h-4 lg:w-6 lg:h-6 rounded-full bg-white border-4 border-slate-300 z-10 transition-transform group-hover:scale-125"></div>
+                            <span class="text-[10px] lg:text-xs font-bold opacity-40 bg-slate-100 px-3 py-1 rounded-full uppercase tracking-wider">2003/4 ~ 2004/7</span>
+                            <h3 class="text-lg lg:text-xl font-bold mt-2 text-[#5D4037]">程式設計師</h3>
+                            <p class="text-sm font-bold text-slate-400 mb-2">敦緯數位</p>
+                            <p class="text-slate-600 text-sm lg:text-base leading-relaxed text-justify">
+                                開發期貨選擇權系統 (Client-Server 架構)。伺服器端採用 <b>Unix Solaris</b> 與 Sybase/Oracle；以公司自研 Middleware 結合 <b>Borland C++ Builder</b> 開發 Windows 客戶端介面。
+                            </p>
+                        </div>
+
+                        <!-- 7. 網鯨資訊 -->
+                        <div class="relative group">
+                            <div class="absolute -left-[30px] lg:-left-[54px] top-1 w-4 h-4 lg:w-6 lg:h-6 rounded-full bg-white border-4 border-slate-300 z-10 transition-transform group-hover:scale-125"></div>
+                            <span class="text-[10px] lg:text-xs font-bold opacity-40 bg-slate-100 px-3 py-1 rounded-full uppercase tracking-wider">2001/11 ~ 2002/12</span>
+                            <h3 class="text-lg lg:text-xl font-bold mt-2 text-[#5D4037]">工程師</h3>
+                            <p class="text-sm font-bold text-slate-400 mb-2">網鯨資訊</p>
+                            <p class="text-slate-600 text-sm lg:text-base leading-relaxed text-justify">
+                                專注於 <b>Pocket PC (PDA)</b> 軟體程式開發與測試工作。
+                            </p>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- 碩士研究 - 夾在職涯歷程與教育背景之間 -->
+                <div class="cloud-card p-6 lg:p-10 bg-[#E0F2F1] no-cursor">
+                    <div class="flex items-center gap-3 mb-6 lg:mb-8">
+                        <div class="p-2 rounded-2xl bg-white/50 text-[#4DB6AC]"><i data-lucide="file-text"></i></div>
+                        <h2 class="text-2xl lg:text-3xl font-bold text-[#5D4037]">碩士研究：醫療資訊標準化</h2>
+                    </div>
+                    <p class="font-medium opacity-80 text-base lg:text-lg leading-relaxed text-justify">
+                        針對電子病歷存取規則的複雜性，我在政大資科研究期間設計了一套可設定式的編輯環境。這項研究的核心價值在於將控管規則制定為標準格式，並能靈活套入各種醫療軟體，提升系統的安全性與通用性。
+                    </p>
+                </div>
+
+                <!-- 教育背景 -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
+                    <div class="cloud-card p-6 lg:p-10 bg-white/90 no-cursor h-full text-justify">
+                        <h3 class="font-bold text-xl lg:text-2xl mb-6 lg:mb-8 flex items-center gap-2 text-[#FF8A80]">
+                            <i data-lucide="graduation-cap"></i> 教育背景
+                        </h3>
+                        <div class="space-y-6">
+                            <div class="relative pl-6 border-l-2 border-[#FDE2E4]">
+                                <div class="absolute -left-[11px] top-0 w-5 h-5 rounded-full bg-[#FF8A80] border-4 border-white shadow-sm"></div>
+                                <span class="text-[10px] font-bold text-[#FF8A80] bg-[#FDE2E4] px-2 py-0.5 rounded-full mb-1 inline-block">在職專班 碩士</span>
+                                <h4 class="font-bold text-base lg:text-lg text-[#5D4037]">國立政治大學 | 資訊科學系</h4>
+                                <p class="text-xs lg:text-sm opacity-60">2004/9 - 2008/1</p>
+                            </div>
+                            <div class="relative pl-6 border-l-2 border-[#E2ECE9]">
+                                <div class="absolute -left-[11px] top-0 w-5 h-5 rounded-full bg-[#E2ECE9] border-4 border-white shadow-sm"></div>
+                                <span class="text-[10px] font-bold opacity-40 mb-1 inline-block">五專畢業</span>
+                                <h4 class="font-bold text-base lg:text-lg text-[#5D4037]">國立台中科技大學 | 資訊管理科</h4>
+                                <p class="text-xs lg:text-sm opacity-60">1994/9 - 1999/6</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. 技術與證照 -->
+        <section id="skills" class="tab-content">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+                <div class="cloud-card p-6 lg:p-8 bg-[#E0F2F1] no-cursor">
+                    <div class="flex items-center gap-3 mb-6 text-[#4DB6AC]">
+                        <i data-lucide="shield"></i>
+                        <h3 class="text-lg lg:text-xl font-bold">.NET Server Side</h3>
+                    </div>
+                    <ul class="space-y-4 text-sm font-bold opacity-80">
+                        <li class="flex justify-between border-b border-white pb-2"><span>Multi-Threads 通訊</span> <span>Expert</span></li>
+                        <li class="flex justify-between border-b border-white pb-2"><span>大型檔案解析轉檔</span> <span>Expert</span></li>
+                        <li class="flex justify-between border-b border-white pb-2"><span>Design Pattern</span> <span>Expert</span></li>
+                        <li class="flex justify-between border-b border-white pb-2"><span>Custom Socket Lib</span> <span>Expert</span></li>
+                    </ul>
+                </div>
+                <div class="cloud-card p-6 lg:p-8 bg-[#FDE2E4] no-cursor">
+                    <div class="flex items-center gap-3 mb-6 text-[#FF8A80]">
+                        <i data-lucide="coffee"></i>
+                        <h3 class="text-lg lg:text-xl font-bold">Java Server Side</h3>
+                    </div>
+                    <ul class="space-y-4 text-sm font-bold opacity-80">
+                        <li class="flex justify-between border-b border-white pb-2"><span>Struts 2 / Hibernate</span> <span>Expert</span></li>
+                        <li class="flex justify-between border-b border-white pb-2"><span>Spring (IoC/AOP)</span> <span>Proficient</span></li>
+                        <li class="flex justify-between border-b border-white pb-2"><span>Servlet / Filter / EJB</span> <span>Expert</span></li>
+                        <li class="flex justify-between border-b border-white pb-2"><span>Hadoop 研究</span> <span>Experienced</span></li>
+                    </ul>
+                </div>
+                <div class="cloud-card p-6 lg:p-8 bg-[#FEF9E7] no-cursor">
+                    <div class="flex items-center gap-3 mb-6 text-[#FFAB91]">
+                        <i data-lucide="check-circle"></i>
+                        <h3 class="text-lg lg:text-xl font-bold">QA & Automation</h3>
+                    </div>
+                    <ul class="space-y-4 text-sm font-bold opacity-80">
+                        <li class="flex justify-between border-b border-[#FDE2E4] pb-2"><span>JMeter 壓測設計</span> <span>Expert</span></li>
+                        <li class="flex justify-between border-b border-[#FDE2E4] pb-2"><span>Robot Framework</span> <span>Expert</span></li>
+                        <li class="flex justify-between border-b border-[#FDE2E4] pb-2"><span>Pytest API 自動化</span> <span>Expert</span></li>
+                        <li class="flex justify-between border-b border-[#FDE2E4] pb-2"><span>Python/Golang 工具開發</span> <span>Expert</span></li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. 作品集 -->
+        <section id="portfolio" class="tab-content">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-10">
+                <div class="cloud-card overflow-hidden p-0 group bg-white md:col-span-2" onclick="openProject('travel')">
+                    <div class="flex flex-col md:flex-row h-full">
+                        <div class="md:w-1/3 h-48 md:h-auto bg-[#E2ECE9] relative flex items-center justify-center text-5xl lg:text-6xl">
+                            ✈️
+                            <div class="absolute top-4 left-4 bg-white/90 px-3 py-1 rounded-full font-bold text-[10px]">點擊詳情</div>
+                        </div>
+                        <div class="p-6 lg:p-10 flex-1">
+                            <h3 class="text-xl lg:text-3xl font-black mb-3 lg:mb-4 tracking-tighter text-[#5D4037]">旅行社客製化 ERP 系統</h3>
+                            <p class="text-slate-500 font-medium mb-4 lg:mb-6 leading-relaxed text-sm lg:text-base text-justify text-justify">
+                                使用 Struts 2 + Hibernate 打造。從 Access 2010 雛形快速開發，並成功轉換為基於 Java 技術的企業級網頁版。
+                            </p>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="px-2 py-1 bg-slate-100 rounded text-[10px] font-black uppercase tracking-widest">JAVA</span>
+                                <span class="px-2 py-1 bg-slate-100 rounded text-[10px] font-black uppercase tracking-widest">STRUTS 2</span>
+                                <span class="px-2 py-1 bg-slate-100 rounded text-[10px] font-black uppercase tracking-widest">MYSQL</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 更多作品項目 -->
+                <div class="cloud-card overflow-hidden p-0 bg-white" onclick="openProject('csharp')">
+                    <div class="h-40 lg:h-48 bg-[#E0F2F1] relative flex items-center justify-center text-4xl lg:text-5xl">📊</div>
+                    <div class="p-6 lg:p-8">
+                        <h3 class="text-lg lg:text-xl font-black mb-2 text-[#5D4037]">大型資料運算轉檔系統 (C#)</h3>
+                        <p class="text-slate-500 text-xs lg:text-sm mb-4 leading-relaxed font-medium text-justify">運用 Multithread Programming 技術處理大型分析專案。</p>
+                        <span class="px-2 py-1 bg-slate-100 rounded text-[10px] font-black uppercase tracking-widest">MULTITHREAD</span>
+                    </div>
+                </div>
+                <div class="cloud-card overflow-hidden p-0 bg-white" onclick="openProject('robot')">
+                    <div class="h-40 lg:h-48 bg-[#FDE2E4] relative flex items-center justify-center text-4xl lg:text-5xl">🤖</div>
+                    <div class="p-6 lg:p-8">
+                        <h3 class="text-lg lg:text-xl font-black mb-2 text-[#5D4037]">Robot Framework UI 自動測試</h3>
+                        <p class="text-slate-500 text-xs lg:text-sm mb-4 leading-relaxed font-medium text-justify">設計 UI 自動化測試腳本，確保系統穩定性。</p>
+                        <span class="px-2 py-1 bg-slate-100 rounded text-[10px] font-black uppercase tracking-widest">AUTOMATION</span>
+                    </div>
+                </div>
+                <div class="cloud-card overflow-hidden p-0 bg-white" onclick="openProject('api')">
+                    <div class="h-40 lg:h-48 bg-[#FEF9E7] relative flex items-center justify-center text-4xl lg:text-5xl">🔗</div>
+                    <div class="p-6 lg:p-8">
+                        <h3 class="text-lg lg:text-xl font-black mb-2 text-[#5D4037]">API 自動化測試設計</h3>
+                        <p class="text-slate-500 text-xs lg:text-sm mb-4 leading-relaxed font-medium text-justify">利用 Python + Pytest + Request 建立高效 API 測試架構。</p>
+                        <span class="px-2 py-1 bg-slate-100 rounded text-[10px] font-black uppercase tracking-widest">PYTEST</span>
+                    </div>
+                </div>
+                <div class="cloud-card overflow-hidden p-0 bg-white" onclick="openProject('pytools')">
+                    <div class="h-40 lg:h-48 bg-[#E2ECE9] relative flex items-center justify-center text-4xl lg:text-5xl">🛠️</div>
+                    <div class="p-6 lg:p-8">
+                        <h3 class="text-lg lg:text-xl font-black mb-2 text-[#5D4037]">Python 輔助自動化工具集</h3>
+                        <p class="text-slate-500 text-xs lg:text-sm font-medium leading-relaxed text-justify">RobotGUI 與自動化測試分析報表工具。</p>
+                        <span class="px-2 py-1 bg-slate-100 rounded text-[10px] font-black uppercase tracking-widest">PYTHON APPS</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. 未來的規劃 -->
+        <section id="blog" class="tab-content">
+            <div class="max-w-4xl mx-auto px-4">
+                <div class="flex flex-col items-center justify-center py-16 lg:py-24 bg-white/40 rounded-[3rem] lg:rounded-[4rem] border-4 border-dashed border-white">
+                    <div class="text-7xl lg:text-9xl mb-8 animate-bounce">📊</div>
+                    <h2 class="text-3xl lg:text-4xl font-black mb-6 text-center text-[#5D4037]">Ellen 的未來規劃</h2>
+                    <div class="bg-white/80 p-8 rounded-3xl shadow-sm border-2 border-white w-full max-w-2xl text-justify">
+                        <p class="text-lg lg:text-xl text-[#FF8A80] font-bold mb-4">✨ 明年度核心計劃：</p>
+                        <ul class="space-y-4 text-slate-600 font-medium">
+                            <li class="flex items-start gap-2">
+                                <i data-lucide="check-circle" class="text-[#4DB6AC] shrink-0 mt-1"></i>
+                                <span>開發以 Python 撰寫的 <b>Excel Sheet To Windows Doc</b> 測試報告產生器。</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i data-lucide="check-circle" class="text-[#4DB6AC] shrink-0 mt-1"></i>
+                                <span>導入 <b>AI 輔助生成系統規格書、測試個案與使用手冊</b>，優化開發流程。</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i data-lucide="check-circle" class="text-[#4DB6AC] shrink-0 mt-1"></i>
+                                <span>啟動 <b>API 綜合測試專案</b>，整合自動化流程與品質監控。</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i data-lucide="check-circle" class="text-[#4DB6AC] shrink-0 mt-1"></i>
+                                <span>持續精進高效能運算與現代 QA 自動化架構的心得分享。</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Project Detailed Modal -->
+    <div id="project-modal" class="fixed inset-0 z-[110] hidden bg-black/40 backdrop-blur-sm flex items-center justify-center p-4 lg:p-6" onclick="closeProject()">
+        <div class="modal-container bg-white w-full max-w-3xl shadow-2xl relative animate-in zoom-in duration-300" onclick="event.stopPropagation()">
+            <button class="absolute top-4 right-4 lg:top-6 lg:right-6 p-2 rounded-full hover:bg-slate-100 transition-colors" onclick="closeProject()">
+                <i data-lucide="x" size="24"></i>
+            </button>
+            <div id="modal-content" class="p-6 lg:p-10 mt-6"></div>
+        </div>
+    </div>
+
+    <footer class="py-12 lg:py-20 border-t-4 border-white/30 text-center px-4">
+        <div class="flex justify-center gap-4 lg:gap-6 mb-8">
+            <a href="#" class="p-3 lg:p-4 rounded-3xl bg-white shadow-sm hover:scale-110 transition-transform text-[#FFAB91]"><i data-lucide="instagram"></i></a>
+            <a href="#" class="p-3 lg:p-4 rounded-3xl bg-white shadow-sm hover:scale-110 transition-transform text-[#FFAB91]"><i data-lucide="github"></i></a>
+            <a href="#" class="p-3 lg:p-4 rounded-3xl bg-white shadow-sm hover:scale-110 transition-transform text-[#FFAB91]"><i data-lucide="mail"></i></a>
+        </div>
+        <p class="opacity-40 text-[10px] lg:text-sm font-bold tracking-widest uppercase leading-loose">© 2024 Ellen's Tech Space<br class="lg:hidden"> | 帶著父親的祝福，專業守護品質</p>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+
+        function toggleMobileMenu(show) {
+            const menu = document.getElementById('mobile-menu');
+            if (show) {
+                menu.classList.add('open');
+                document.body.style.overflow = 'hidden';
+            } else {
+                menu.classList.remove('open');
+                document.body.style.overflow = 'auto';
+            }
+        }
+
+        function handleMobileNav(targetId) {
+            switchTab(targetId);
+            toggleMobileMenu(false);
+        }
+
+        function switchTab(targetId) {
+            const contents = document.querySelectorAll('.tab-content');
+            const navBtns = document.querySelectorAll('.nav-btn');
+            const navBtnsMobile = document.querySelectorAll('.nav-btn-mobile');
+
+            contents.forEach(content => {
+                content.classList.remove('active');
+                if (content.id === targetId) content.classList.add('active');
+            });
+
+            navBtns.forEach(btn => {
+                if (btn.getAttribute('data-tab-target') === targetId) {
+                    btn.classList.add('nav-active');
+                } else {
+                    btn.classList.remove('nav-active');
+                }
+            });
+
+            navBtnsMobile.forEach(btn => {
+                if (btn.getAttribute('data-tab-target') === targetId) {
+                    btn.classList.add('bg-[#FDE2E4]', 'border-2', 'border-[#FFAB91]');
+                } else {
+                    btn.classList.remove('bg-[#FDE2E4]', 'border-2', 'border-[#FFAB91]');
+                }
+            });
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        document.querySelectorAll('.nav-btn').forEach(btn => {
+            btn.addEventListener('click', () => switchTab(btn.getAttribute('data-tab-target')));
+        });
+
+        // 專案數據資料
+        const projectData = {
+            travel: {
+                title: "旅行社客製化 ERP 系統 (Java)",
+                tech: "Struts 2 + Hibernate + MySQL + Tomcat",
+                desc: "2014 年完成的獨立接案工作。先以 Access 2010 設計雛形與客戶討論，隨後轉換為基於 Java 技術的企業級 Web 系統。",
+                features: [
+                    "登入權限分級，編輯權限依身分限制",
+                    "樞紐 (Pivot) 分析圖表，提供直觀決策支援",
+                    "主從式資料表 (Master-Detail Grid) 報表呈現",
+                    "Access to MySQL 轉換工具 (使用 C# WinForm 開發)",
+                    "Windows Service 定期執行資料庫自動備份",
+                    "使用者登入紀錄與 Timeout 自動登出機制"
+                ]
+            },
+            csharp: {
+                title: "大型資料運算轉檔系統 (C#)",
+                tech: ".NET Framework / Multithread Programming",
+                desc: "主導大型 C# 專案，專注於高效能資料運算與大型檔案轉檔分析。對 .NET Framework 有深厚見解。",
+                features: [
+                    "Multi-Threads + Event Driven 通訊機制設計",
+                    "Multiple Large Files 高併發解析與處理",
+                    "嚴謹應用 Design Pattern 提升程式碼維護性",
+                    "開發 Custom Library (包含 DB, Log, ConcurrentDictionary 快取)",
+                    "研發 Custom Socket Library 處理底層通訊協定"
+                ]
+            },
+            robot: {
+                title: "Robot Framework UI 自動化測試",
+                tech: "Robot Framework / Selenium / Custom Library",
+                desc: "建立完整的 UI 自動化測試體系，顯著提升回歸測試效率。",
+                features: [
+                    "測試個案 (Test Case) 深度撰寫與流程分析",
+                    "設計 Robot Framework 專屬程式庫 (Library) 擴充功能",
+                    "整合自動化測試腳本"
+                ]
+            },
+            api: {
+                title: "API 自動化測試設計",
+                tech: "Python + Pytest + Requests",
+                desc: "針對現代微服務架構開發之 API 自動化測試方案，確保後端介面之正確性與穩定性。",
+                features: [
+                    "利用 Pytest 建立靈活且可擴展的測試架構",
+                    "使用 Requests 庫處理複雜的 API 請求與傳輸格式 (JSON)",
+                    "實現 API 功能自動化驗證與資料回傳校對"
+                ]
+            },
+            pytools: {
+                title: "Python 輔助自動化工具集",
+                tech: "Python / Tkinter / Google API / Golang",
+                desc: "開發多款內部工具，旨在消除測試流程中的瑣碎人工操作。",
+                features: [
+                    "<b>RobotGUI App</b>: 視覺化輔助自動測試工具，簡化腳本操作介面",
+                    "<b>GoogleSheetToGoogleDoc</b>: 自動產出線上專業測試報告",
+                    "<b>Golang 工具</b>: 運用 Go 語言特性開發效能測試輔助工具"
+                ]
+            }
+        };
+
+        function openProject(id) {
+            const data = projectData[id];
+            const modal = document.getElementById('project-modal');
+            const content = document.getElementById('modal-content');
+            let featureList = data.features.map(f => `
+                <li class="flex items-start gap-3 mb-4 text-justify text-slate-600 font-medium">
+                    <i data-lucide="check-circle-2" class="text-[#4DB6AC] shrink-0 mt-1" size="18"></i>
+                    <span>${f}</span>
+                </li>
+            `).join('');
+
+            content.innerHTML = `
+                <div class="mb-6 lg:mb-8 text-justify">
+                    <span class="inline-block px-3 py-1 rounded-full bg-[#FDE2E4] text-[#FF8A80] font-black text-[10px] uppercase mb-3 tracking-widest">${data.tech}</span>
+                    <h2 class="text-2xl lg:text-4xl font-black text-[#5D4037] mb-4">${data.title}</h2>
+                    <p class="text-sm lg:text-lg text-slate-500 leading-relaxed font-medium text-justify">${data.desc}</p>
+                </div>
+                <div class="bg-[#FEF9E7]/50 p-6 lg:p-8 rounded-[2rem] border-2 border-dashed border-[#FDE2E4]">
+                    <h4 class="text-lg lg:text-xl font-bold mb-4 lg:mb-6 flex items-center gap-2 text-[#5D4037]">
+                        <i data-lucide="list-checks" class="text-[#FFAB91]"></i> 核心功能與技術細節
+                    </h4>
+                    <ul class="grid grid-cols-1 gap-1">${featureList}</ul>
+                </div>
+            `;
+            
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+            lucide.createIcons();
+        }
+
+        function closeProject() {
+            document.getElementById('project-modal').classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+    </script>
+</body>
+</html>
