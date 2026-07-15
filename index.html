@@ -89,6 +89,43 @@
             border-radius: 3rem;
             max-height: 85vh;
             overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: transparent transparent;
+            transition: scrollbar-color 0.4s ease;
+        }
+
+        .modal-container.scrolling {
+            scrollbar-color: #FFAB91 #FEF9E7;
+        }
+
+        .modal-container::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        .modal-container::-webkit-scrollbar-track {
+            background: transparent;
+            border-radius: 3rem;
+        }
+
+        .modal-container::-webkit-scrollbar-thumb {
+            background-color: transparent;
+            border-radius: 999px;
+            border: 2px solid transparent;
+            background-clip: padding-box;
+            transition: background-color 0.4s ease;
+        }
+
+        .modal-container.scrolling::-webkit-scrollbar-track {
+            background: #FEF9E7;
+        }
+
+        .modal-container.scrolling::-webkit-scrollbar-thumb {
+            background-color: #FFAB91;
+            border-color: #FEF9E7;
+        }
+
+        .modal-container.scrolling::-webkit-scrollbar-thumb:hover {
+            background-color: #FF8A80;
         }
 
         /* 手機版選單動畫 */
@@ -920,6 +957,17 @@
             document.getElementById('project-modal').classList.add('hidden');
             document.body.style.overflow = 'auto';
         }
+
+        // 捲軸僅在捲動時短暫顯示
+        (function () {
+            const modalScroll = document.querySelector('.modal-container');
+            let hideTimer;
+            modalScroll.addEventListener('scroll', () => {
+                modalScroll.classList.add('scrolling');
+                clearTimeout(hideTimer);
+                hideTimer = setTimeout(() => modalScroll.classList.remove('scrolling'), 800);
+            });
+        })();
     </script>
 </body>
 
